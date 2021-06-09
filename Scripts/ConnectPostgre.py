@@ -2,6 +2,7 @@
 Get (mapped) health and SNP data and put these in an Postgre SQL database.
 """
 import psycopg2
+import Semantic_health_data
 
 
 def connect():
@@ -69,12 +70,7 @@ def insert_health_data(cur, health_data, person_id):
     if response is not None:
         exit("This person is already in the database")
 
-    # “Participant”, “Birth month”, “Birth year”, “Sex”, “Ethnicity” en “Conditions or Symptoms”
-    sex = 0
-    if health_data['Sex'][0] == 'M':
-        sex = 1
-    elif health_data['Sex'][0] == 'F':
-        sex = 2
+    health_ids = Semantic_health_data.main()
 
     cur.execute("""INSERT INTO person(person_id, person_source_value,
                                     gender_concept_id, gender_source_value,
@@ -87,9 +83,9 @@ def insert_health_data(cur, health_data, person_id):
                                     %s, %s,
                                     %s)""",
                                     (person_id, health_data['Participant'][0],
-                                     sex, health_data['Sex'][0],
+                                     health_ids['Gender'], health_data['Sex'][0],
                                      health_data['Birth year'][0], health_data['Birth month'][0],
-                                     [hier moet race concept id in type int], health_data['Ethnicity'][0],
+                                     health_ids['race'], health_data['Ethnicity'][0],
                                      0
     ))
 
@@ -97,13 +93,11 @@ def insert_health_data(cur, health_data, person_id):
     conditions = []
     if health_data.get('Conditions or Symptom') is not None:
         conditions.extend(health_data['Conditions or Symptom'])
-    if health_data.get('Allergies') is not None:
-        conditions.extend(health_data['Allergies'])
 
     condition_id = get_occurrence_id(cur)
 
-    Add conditions to the database
-    for condition in conditions:
+    # Add conditions to the database
+    for condition, condition_id_mapped in zip(conditions, health_ids['Condition']):
         cur.execute("""INSERT INTO condition_occurrence(condition_occurrence_id, person_id,
                                                         condition_type_concept_id,
                                                         condition_concept_id, condition_source_value,
@@ -114,7 +108,7 @@ def insert_health_data(cur, health_data, person_id):
                                                         %s)""",
                                                         (condition_id, person_id,
                                                          0,
-                                                         [hier moet condition concept id in type int], condition,
+                                                         condition_id_mapped, condition,
                                                          '0001-01-01'))
         condition_id += 1
 
@@ -158,20 +152,29 @@ def insert_snp_data(cur, snps, person_id):
         cur.execute("""INSERT INTO measurement( measurement_id,
                                                 person_id,
                                                 measurement_concept_id,
+                                                measurement_type_concept_id,
                                                 measurement_date,
                                                 measurement_datetime,
                                                 measurement_time,
-                                                
-
-
-                                                # ) VALUES (%s, %s,
-                                                # %s,
-                                                # %s, %s,
-                                                # %s)""",
-                                                # (condition_id, person_id,
-                                                #  0,
-                                                #  [hier moet condition concept id in type int], condition,
-                                                #  '0001-01-01'))
+                                                measurement_source_value,
+                                                value_source_value
+                                                ) VALUES (%s,
+                                                %s,
+                                                %s,
+                                                %s,
+                                                %s,
+                                                %s,
+                                                %s,
+                                                %s)""",
+                                                (measurement_id,
+                                                person_id,
+                                                [measurement_concept_id],
+                                                32817, # Dit is de id voor een ehr. gevonden op https://odhsi.github.io/CommonDataModel/cdm531.html Dan kijken bij uitleg measurement_type_concept_id. Dan de link aanklikken.
+                                                date,
+                                                date_time,
+                                                time,
+                                                "Variants",
+                                                snp))
 
 
 def get_person_id(cur):
@@ -192,7 +195,7 @@ def get_person_id(cur):
 
 def get_occurrence_id(cur):
     """
-    Retrieves the latest occurrence_id from the condition_occurrence table and adds 1. 
+    Retrieves the latest occurrence_id from the condition_occurrence table and adds 1.
     If nothing is in the database, returns 0.
     :param cur: A cursor object.
     :return: The latest occurrence_id from the condition_occurrence table + 1. If no occurrence_id is present, returns 0
