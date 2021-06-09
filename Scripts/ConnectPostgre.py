@@ -229,12 +229,12 @@ def main():
     conn, cur = connect()
 
     health = getcsv()
-    snps = getvcf()
+    # snps = getvcf()
 
     person_id = get_person_id(cur)
 
     insert_health_data(cur, health, person_id)
-    insert_snp_data(cur, snps, person_id)
+    # insert_snp_data(cur, snps, person_id)
 
     conn.commit()
     conn.close()
