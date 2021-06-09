@@ -168,7 +168,7 @@ def insert_snp_data(cur, snps, person_id):
                                                 %s)""",
                                                 (measurement_id,
                                                 person_id,
-                                                [measurement_concept_id],
+                                                0,
                                                 32817, # Dit is de id voor een ehr. gevonden op https://odhsi.github.io/CommonDataModel/cdm531.html Dan kijken bij uitleg measurement_type_concept_id. Dan de link aanklikken.
                                                 date,
                                                 date_time,
