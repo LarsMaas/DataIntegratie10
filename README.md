@@ -65,26 +65,26 @@ psycopg2_binary==2.8.6
 ├──ETL.sh  
 └──README.md  
 ```
-###Patient_data
+### Patient_data
 The vcf (extracted) and pdf file from a person should be put here.    
 
-###Metadata
+### Metadata
 A text file is made here everytime the program is used, the name of the given file is stored along with the date and time and version of the program in JSON format.
 
-###Scripts
+### Scripts
 All Python scripts used in this program are stored here.
 
-###snpEff
+### snpEff
 This should be the location of the SNPeff program. 
 
-###temp
+### temp
 All temporary files are stored here. These include the PDF information, and the filtered vfc file.  
 This folder is emptied everytime the program runs.
 
-###ExampleData
+### ExampleData
 Contains pdf and vcf data from person 10, 20 and 30. These are zipped. Also contains an example metadata JSON file.
 
-###ETL.sh
+### ETL.sh
 This is a Bash script that calls all independent Python scripts.
 
 ## Running the program
@@ -103,7 +103,7 @@ The folder containing this data has been zipped. To use this data:
 2. Place both the PDF and .vcf file in the Patient_data folder.
 3. Run ETL.sh.
 
-##Program flow
+## Program flow
 What happens after ETL.sh is called:
 
 ### 1. Empty temp folder  
