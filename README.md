@@ -89,7 +89,7 @@ This is a Bash script that calls all independent Python scripts.
 
 ## Running the program
 1. Acquire the .vcf and PDF file from a person in [PGP](https://personalgenomes.ca/data) and store (only) these in `./DataIntegratie10/Patient_data`.  
-   <b>Important!</b> Be sure the .vcf file is unzipped.
+   <b>Important!</b> Make sure the .vcf file is unzipped.
 2. Make sure you have an internet connection.
 3. When in the `DataIntegratie10` folder, run ETL.sh using `./ETL.sh`
    
@@ -100,7 +100,7 @@ Note: The first time using snpEff, the GRch37 will be downloaded. This may take 
 The data from person 10, 20 and 30 can be found in the folder `ExampleData`. 
 The folder containing this data has been zipped. To use this data:
 1. Unzip the folder of the person you would like to use.
-2. Place both the PDF and .vcf file in the Patient_data folder.
+2. Place both the PDF and .vcf file in the `Patient_data` folder.
 3. Run ETL.sh.
 
 ## Program flow
