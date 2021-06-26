@@ -1,6 +1,0 @@
-Run starting date:
-Wed Jun  9 11:28:31 PM CEST 2021
- 
-Files Used:
-./Patient_data/1503AHX-0002_PGPC-0030-243898-U_SNP_INDEL.vcf
-./Patient_data/PGPC-10.pdf
